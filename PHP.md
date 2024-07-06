@@ -63,8 +63,63 @@ http://localhost/folder_name/
 
 ## Переменные
 
-TODO
+Всё те же типы что и в JS, однако
+когда идёт echo булевых переменных, выводится следующее:
+
+- true = 1
+- false = пустая строка.
 
 ```php
+<?php
+  $name = 'homer simpson';
+  $food = 'pizza';
+  echo "Hello $name, you like $food <br>";
 
+  $number = 10.4;
+  echo "$number <br>";
+
+  $employed = false;
+  $unhappy = true;
+
+  echo "$employed <br>";
+  echo "$unhappy <br>";
+
+  $total = null;
+
+  $total = $number * 2.3;
+
+  echo "TOTAL: $total <br>";
+?>
+```
+
+## Операторы в PHP
+
+Всё опять так же как и в JS.
+
+```php
+<?php
+  $x = 10;
+  $y = 2;
+  $z = null;
+
+  $z = $x + $y;
+  $z = $x / $y;
+  $z = $x * $y;
+  $z = $x ** $y; // степень
+  $z = $x % $y; // остаток от деления
+
+  echo "$z <br>";
+
+  $counter = 0;
+  $counter++;
+  $counter--;
+  $counter+= 3;
+  $counter-= 3;
+
+  echo "COUNTER: $counter <br>";
+
+  //Порядок исполнения операторов (слева направо):
+  // () ** % * / + -
+
+?>
 ```
