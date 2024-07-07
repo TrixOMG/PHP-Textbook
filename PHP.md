@@ -123,3 +123,104 @@ http://localhost/folder_name/
 
 ?>
 ```
+
+## $\_GET and $\_POST variables
+
+$\_GET
+
+- данные добавляются в url страницы
+- не безопасен
+- имеет лимит по символам (char limit)
+- Bookmark is possible w/ values
+- Better for a search page
+
+$\_POST
+
+- Data is packaged inside the body of HTTP request
+- More Secure
+- No data limit
+- Cannot bookmark
+- Requests are not cached
+- Better for submitting credentials
+
+### $\_GET
+
+Получение данных с формы.
+У формы обязательно должен быть атрибут action
+который укажет к какому именно файлу php мы
+посылаем данные.
+и атрибут method.
+
+Конкатенация string происходит через оператор "."
+Если переменная простая, её можно вставить в string
+как есть.
+Если переменная сложная, как в примере ниже,
+нужны {}
+
+При использовании get все данные засабмиченной
+формы отобразятся в адресе страницы,
+это небезопасно.
+
+```php
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>_GET and _POST variables</title>
+</head>
+<body>
+  <form action="index.php" method="get">
+    <label for="username">username:</label>
+    <br>
+    <input type="text" id="username" name="username"/>
+    <br>
+
+    <label for="password">password:</label>
+    <br>
+    <input type="text" id="password" name="password"/>
+    <br>
+
+    <input type="submit" value="Log In"/>
+  </form>
+</body>
+</html>
+
+<?php
+echo $_GET["username"] . "<br>";
+echo "{$_GET["password"]}<br>";
+?>
+```
+
+### $\_POST
+
+При использовании \_POST данные засабмиченной
+формы не отображаются в адресе страницы.
+
+```php
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>_GET and _POST variables</title>
+</head>
+<body>
+  <form action="index.php" method="post">
+    <label for="quantity">quantity:</label>
+    <br>
+    <input type="number" name="quantity" id="quantity"/>
+    <br>
+    <input type="submit" value="Total"/>
+  </form>
+</body>
+</html>
+
+<?php
+  $item = 'pizza';
+  $price = 5.99;
+  $quantity = $_POST["quantity"];
+  $total = $quantity * $price;
+  echo "You have ordered: {$quantity} {$item}/s with total price of \${$total}<br>";
+?>
+```
