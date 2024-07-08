@@ -224,3 +224,150 @@ echo "{$_GET["password"]}<br>";
   echo "You have ordered: {$quantity} {$item}/s with total price of \${$total}<br>";
 ?>
 ```
+
+## Math functions
+
+```php
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Math functions</title>
+</head>
+<body>
+  <form action="index.php" method="post">
+    <label>x:</label>
+    <input type="text" name="x"/>
+    <br>
+    <label>y:</label>
+    <input type="text" name="y"/>
+    <br>
+    <label>z:</label>
+    <input type="text" name="z"/>
+    <br>
+
+    <input type="submit" value="Total"/>
+  </form>
+</body>
+</html>
+
+<?php
+  $x = $_POST['x'];
+  $y = $_POST['y'];
+  $z = $_POST['z'];
+  $total = null;
+
+  //$total = abs($x);
+  //$total = round($x);
+  //$total = floor($x);
+  //$total = ceil($x);
+  //$total = pow($x, $y);
+  //$total = max($x, $y, $z);
+  //$total = min($x, $y, $z);
+  //$total = pi();
+  //$total = rand(1, 100);
+
+  echo $total;
+?>
+```
+
+## If else statements
+
+Идентично JS, однако else if пишется слитно.
+
+```php
+<?php
+  $age = 101;
+  if($age > 18) {
+    ...
+  } elseif($age < 50) {
+    ...
+  } else {
+    ...
+  }
+?>
+```
+
+## Logical operators
+
+Идентично JS.
+
+```php
+<?php
+  $statement1 = true;
+  $statement2 = false;
+
+  if($statement1 && $statement2) {
+    echo "statement1 and statement2 are true";
+  } elseif ($statement1 || $statement2) {
+    echo "statement1 or statement2 is true";
+  } elseif (!$statement1) {
+    echo "statement1 is false";
+  }
+?>
+```
+
+## Switch statements
+
+Идентично JS.
+
+```php
+<?php
+  $color = "green";
+
+  switch($color) {
+    case "red":
+      echo "color is red";
+      break;
+    case "green":
+      echo "color is green";
+      break;
+    case "blue":
+      echo "color is blue";
+      break;
+    default:
+      echo "color is not red, green or blue";
+  }
+```
+
+## For loops
+
+Идентично JS.
+
+```php
+<?php
+  for($i = 0; $i < 10; $i++) {
+    echo $i;
+  }
+?>
+```
+
+## While loops
+
+Идентично JS.
+
+```php
+<?php
+  $i = 0;
+  while($i < 10) {
+    echo $i;
+    $i++;
+  }
+?>
+```
+
+## Arrays + Foreach loops
+
+TODO: доделать
+
+```php
+<?php
+  $colors = array("red", "green", "blue");
+  array_push($colors, "yellow", "purple");
+  array_pop($colors);
+  foreach($colors as $color) {
+    echo $color . "<br>";
+  }
+?>
+```
