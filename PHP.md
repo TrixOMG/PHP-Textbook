@@ -359,15 +359,53 @@ echo "{$_GET["password"]}<br>";
 
 ## Arrays + Foreach loops
 
-TODO: доделать
-
 ```php
 <?php
   $colors = array("red", "green", "blue");
   array_push($colors, "yellow", "purple");
   array_pop($colors);
+  array_shift($colors);
+  $colors = array_reverse($colors);
+  echo count($colors) . "<br>";
+
   foreach($colors as $color) {
     echo $color . "<br>";
+  }
+?>
+```
+
+## Associative arrays
+
+An arrays made of key-value pairs
+(Like Map in JS)
+
+Функции, применяемые к обычным массивам работают
+и с ассоциативными массивами.
+
+```php
+<?php
+  $ages = array(
+    "Peter" => 35,
+    "Ben" => 37,
+    "Joe" => 43
+  );
+  echo $ages["Peter"] . "<br>";
+
+  $ages["Peter"] = 36;
+  $ages["Mary"] = 23;
+
+  echo $ages["Peter"] . "<br>";
+
+  $keys = array_keys($ages);
+  $vals = array_values($ages);
+
+  print_r($keys);
+  echo "<br>";
+  print_r($vals);
+  echo "<br>";
+
+  foreach($ages as $key => $value) {
+    echo $key . " is " . $value . " years old <br />";
   }
 ?>
 ```
