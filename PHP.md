@@ -633,3 +633,189 @@ value в PHP через методы $\_POST или $\_GET.
   echo "Implode: ".implode("-", $userArr) . "<br>";
 ?>
 ```
+
+## Sanitize / Validate Input in PHP
+
+Sanitization example:
+
+```php
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sanitization</title>
+</head>
+<body>
+  <form action="index.php" method="post">
+    username: <br>
+    <input type="text" name="username"/> <br>
+    age: <br>
+    <input type="text" name="age"/> <br>
+    email: <br>
+    <input type="text" name="email"/> <br>
+
+   <input type="submit" name="login" value="Login"/> <br>
+  </form>
+</body>
+</html>
+
+<?php
+  if(isset($_POST['login'])) {
+    $username = filter_input(
+      INPUT_POST,
+      'username',
+      FILTER_SANITIZE_SPECIAL_CHARS
+    );
+
+    $age = filter_input(
+      INPUT_POST,
+      'age',
+      FILTER_SANITIZE_NUMBER_INT
+    );
+
+    $email = filter_input(
+      INPUT_POST,
+      'email',
+      FILTER_SANITIZE_EMAIL
+    );
+
+
+    echo "Hello " . $username . "<br>";
+    echo "You are " . $age . " years old";
+    echo $email . "<br>";
+  }
+?>
+```
+
+Validation example:
+
+```php
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Validation</title>
+</head>
+<body>
+  <form action="index.php" method="post">
+    username: <br>
+    <input type="text" name="username"/> <br>
+    age: <br>
+    <input type="text" name="age"/> <br>
+    email: <br>
+    <input type="text" name="email"/> <br>
+
+   <input type="submit" name="login" value="Login"/> <br>
+  </form>
+</body>
+</html>
+
+<?php
+  if(isset($_POST['login'])) {
+    $age = filter_input(
+      INPUT_POST,
+      'age',
+      FILTER_VALIDATE_INT
+    );
+
+    $email = filter_input(
+      INPUT_POST,
+      'email',
+      FILTER_VALIDATE_EMAIL
+    );
+
+
+    //same with the other examples
+    if(empty($age)) {
+      echo'Age must be a number';
+    } else {
+      echo 'Your age is: ' . $age;
+    }
+  }
+?>
+```
+
+## include() function in PHP
+
+Позволяет многократно использовать "компоненты"
+как в React
+
+```php
+<?php
+  include("header.html");
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  This is a Home page<br>
+  Thigs abount the Home page can go here <br>
+</body>
+</html>
+
+<?php
+  include("footer.html");
+?>
+
+
+```
+
+### Header
+
+```html
+<header>
+  <h2>This is a header</h2>
+  <a href="index.php">Home</a>
+  <a href="about.php">About</a>
+  <a href="locations.php">Locations</a>
+  <hr />
+</header>
+```
+
+### Footer
+
+```html
+<footer>
+  <hr />
+  Author: Pavel Nikitin <br />
+  <a href="mailto:nikitin.pavel.163@gmail.com">Email Me</a>
+</footer>
+```
+
+## Cookies in PHP
+
+Cookies in browser can be found in devtools (F12)
+Application -> Cookies
+
+86400 - seconds in a day, время через
+которое будут удалены cookies
+
+чтобы удалить cookies можно использовать
+3-м аргументом: time() - 0
+
+```php
+<?php
+  setcookie("fav_food", "pizza", time() + 86400, "/");
+?>
+```
+
+чтобы запринтить cookies:
+
+```php
+  foreach($_COOKIE as $key => $value) {
+    echo $key . " = " . $value . "<br>";
+  }
+```
+
+Cookies is an information about a user stored
+in a user's browser.
+Can be used for targeted ads,
+browsing preferences,
+other non-sensitive data.
