@@ -409,3 +409,227 @@ An arrays made of key-value pairs
   }
 ?>
 ```
+
+## isset() + empty()
+
+- isset(): true if variable is declared and
+  not null
+
+- empty(): true if variable is not declared,
+  false, null, ""
+
+```php
+<?php
+  $name = "John"; //false, 1, null
+
+  if(isset($name)) {
+    echo "variable name is set";
+  } else {
+    echo "variable name is not set";
+  }
+  echo "<br>";
+
+  if(empty($name)) {
+    echo "variable name is empty";
+  } else {
+    echo "variable name is not empty";
+  }
+?>
+```
+
+Checking if form is filled:
+
+```php
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>isset() + empty()</title>
+</head>
+<body>
+  <form action="index.php" method="post">
+    <label>username:</label>
+    <br>
+    <input type="text" name="username" />
+    <br>
+    <label>password:</label>
+    <br>
+    <input type="password" name="password" />
+    <br>
+    <input type="submit" name="login" value="Log In"/>
+    <br>
+  </form>
+</body>
+</html>
+
+<?php
+
+  if(isset($_POST["login"])) {
+    $username = $_POST["username"];
+    $password = $_POST["password"];
+
+    if(empty($username)) {
+      echo "Username cannot be empty";
+    } elseif (empty($password)) {
+      echo "Password cannot be empty";
+    } else {
+      echo "Hello {$username}";
+    }
+  }
+?>
+```
+
+## Work with Radio buttons in PHP
+
+Радиокнопки должны иметь одинаковый атрибут name
+чтобы нельзя было выбрать несколько вариантов
+одного значения.
+
+По значению атрибута name мы получаем
+value в PHP через методы $\_POST или $\_GET.
+
+```php
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Radio buttons</title>
+</head>
+<body>
+  <form action="index.php" method="post">
+    <input type="radio" value="Visa" name="card"/>
+    <label >Visa</label> <br>
+    <input type="radio" value="Mastercard" name="card"/>
+    <label >Mastercard</label> <br>
+    <input type="radio" value="Mir" name="card"/>
+    <label>Mir</label> <br>
+    <input type="submit" name="confirm" value="Confirm"/>
+  </form>
+</body>
+</html>
+
+<?php
+  if(isset($_POST['confirm'])) {
+    if(isset($_POST['card'])) {
+      $credit_card = $_POST['card'];
+      echo $credit_card;
+    } else {
+      echo "Please select credit card";
+    }
+  }
+?>
+```
+
+## Work with Checkboxes in PHP
+
+Атрибут name можно задать "массивом" добавив
+после привычного ключа []
+(как в примере и блоке ниже)
+
+> name="foods[]"
+
+```php
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkboxes</title>
+</head>
+<body>
+  <form action="index.php" method="post">
+    <input type="checkbox" name="foods[]" value="Pizza"/>
+    Pizza <br>
+    <input type="checkbox" name="foods[]" value="Hamburger"/>
+    Hamburger <br>
+    <input type="checkbox" name="foods[]" value="Hotdog"/>
+    Hotdog <br>
+    <input type="checkbox" name="foods[]" value="Taco"/>
+    Taco <br>
+    <input type="submit" name="submit"/> <br>
+    </form>
+</body>
+</html>
+
+<?php
+  if(isset($_POST['submit'])) {
+    $foods = $_POST['foods'];
+
+    foreach($foods as $food) {
+      echo $food . "<br>";
+    }
+  }
+?>
+```
+
+## Functions in PHP
+
+Почти то же самое, что и в JS.
+
+```php
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>isset() + empty()</title>
+</head>
+<body>
+  <form action="index.php" method="post">
+    <input type="checkbox" name="foods[]" value="Pizza"/>
+    Pizza <br>
+    <input type="checkbox" name="foods[]" value="Hamburger"/>
+    Hamburger <br>
+    <input type="checkbox" name="foods[]" value="Hotdog"/>
+    Hotdog <br>
+    <input type="checkbox" name="foods[]" value="Taco"/>
+    Taco <br>
+    <input type="submit" name="submit"/> <br>
+    </form>
+</body>
+</html>
+
+<?php
+  if(isset($_POST['submit'])) {
+    $foods = $_POST['foods'];
+    printArray($foods, 123);
+  }
+
+  function printArray($array, $number) {
+    foreach($array as $food) {
+      echo "Food: ". $number . " " . $food . "<br>";
+    }
+  }
+?>
+```
+
+## Useful String Functions in PHP
+
+```php
+<?php
+  $username = '       Pavel Nikitin    ';
+  echo strtolower($username). '<br>';
+  echo strtoupper($username). '<br>';
+  echo trim($username) . '<br>';
+  echo str_pad($username, 30, "*", STR_PAD_BOTH) ."<br>";
+  echo str_replace("P", "-", $username) . '<br>';
+  echo strrev($username) . '<br>';
+  echo str_shuffle($username) . '<br>';
+  echo strcmp($username, 'Pavel') . '<br>';
+  echo strlen($username) . '<br>';
+  echo strpos($username, 'N') . '<br>';
+  echo substr($username, 0, 10) . '<br>';
+
+  $fullname = explode(" ", trim($username));
+
+  foreach ($fullname as $caracters) {
+    echo "Explode: ".$caracters . "<br>";
+  }
+
+  $userArr = array('Pavel', 'Nikitin');
+
+  echo "Implode: ".implode("-", $userArr) . "<br>";
+?>
+```
