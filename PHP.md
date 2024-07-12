@@ -819,3 +819,153 @@ in a user's browser.
 Can be used for targeted ads,
 browsing preferences,
 other non-sensitive data.
+
+## Sessions in PHP
+
+Session is a Super Global Variable (SGB)
+для использования на нескольких страницах.
+пользователю присуждается session-id
+ex. login credentials
+
+```php
+<?php
+  $_SESSION["username"] = 'Pavel Nikitin';
+  $_SESSION["password"] = '123123';
+
+  echo $_SESSION["username"] . "<br>";
+  echo $_SESSION["password"] . "<br>";
+?>
+```
+
+Example with Login and Home pages:
+
+- Login page
+
+```php
+<?php
+  session_start();
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <form action="index.php" method="post">
+    username:<br>
+    <input type="text" name="username"/><br>
+    password:<br>
+    <input type="password" name="password"/><br>
+    <input type="submit" name="login" value="login"/><br>
+
+  </form>
+</body>
+</html>
+
+<?php
+  if(isset($_POST["login"])) {
+    if(
+      !empty($_POST["username"]) &&
+      !empty($_POST["password"])
+    ) {
+      //using this without filter is dangerous
+      $_SESSION["username"] = $_POST["username"];
+      $_SESSION["password"] = $_POST["password"];
+
+      header("Location: home.php");
+   } else {
+      echo"Missing username or password";
+    }
+  }
+?>
+```
+
+- Home page
+
+```php
+<?php
+  session_start();
+?>
+
+  This is a home page <br>
+  <form action="home.php" method="post">
+    <input type="submit" name="logout" value="logout"/>
+  </form>
+  <br>
+
+<?php
+  echo $_SESSION["username"] . "<br>";
+  echo $_SESSION["password"] . "<br>";
+
+  if(isset($_POST["logout"])) {
+    session_destroy();
+    header("Location: index.php");
+  }
+?>
+```
+
+## Server SGB (Basic stuff)
+
+Contains headers, paths, and script locations.
+Entries created by web server.
+Shows nearly everything you need to know
+about the current web page environment.
+
+```php
+<?php
+  foreach($_SERVER as $key => $value) {
+    echo $key . " => " . $value . "<br>";
+  }
+?>
+```
+
+Пример с PHP_SELF:
+
+```php
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <form action="<?PHP htmlspecialchars($_SERVER["PHP_SELF"])?>" method="post">
+    username:<br>
+    <input type="text" name="username">
+    <input type="submit" value="Submit">
+  </form>
+</body>
+</html>
+
+<?php
+  //some code
+?>
+```
+
+```php
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <form action="<?PHP htmlspecialchars($_SERVER["PHP_SELF"])?>" method="post">
+    username:<br>
+    <input type="text" name="username">
+    <input type="submit" value="Submit">
+  </form>
+</body>
+</html>
+
+<?php
+  if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    echo "Hello " . $_POST["username"];
+  }
+?>
+```
