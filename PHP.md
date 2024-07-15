@@ -969,3 +969,193 @@ about the current web page environment.
   }
 ?>
 ```
+
+## Hashing in PHP
+
+transforming sensitive data
+into letters, numbers, and/or symbols
+via a mathematical process (similar to encryption)
+Hides the original data from 3rd parties.
+
+```php
+  $password = "pizza123";
+
+  //brcypt algorithm
+  $hash = password_hash($password, PASSWORD_DEFAULT);
+  echo $hash . "<br>";
+
+  //check if password is correct
+  if(password_verify("pizza123", $hash)) {
+    echo "Password is correct";
+  } else {
+    echo "Password is incorrect";
+  }
+```
+
+## MySQL
+
+Ways to connect to MySQL:
+
+- MySQLi Extension
+- PDO (PHP Data Objects)
+
+database.php :
+
+```php
+<?php
+  $db_server = "localhost";
+  $db_user = "root";
+  $db_pass = "";
+  $db_name = "businessdb";
+  $conn = "";
+
+  try {
+    $conn = mysqli_connect(
+     $db_server,
+     $db_user,
+     $db_pass,
+     $db_name
+   );
+  } catch (mysqli_sql_exception) {
+    echo "Connection failed" . "<br>";
+  }
+
+  if($conn) {
+    echo "Connection successful" . "<br>";
+  }
+?>
+```
+
+index.php :
+
+```php
+<?php
+  include("database.php");
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <form action="<?PHP htmlspecialchars($_SERVER["PHP_SELF"])?>" method="post">
+  </form>
+</body>
+</html>
+```
+
+## Creating tables in phpmyadmin
+
+http://localhost/phpmyadmin
+
+далее использовать предоставленный интерфейс,
+всё почти то же самое, что и в SQL Server.
+
+## Inserting data to MySQL tables
+
+```php
+<?php
+  include("database.php");
+
+  $username = 'Patrick';
+  $password = 'rocklee';
+  $hash = password_hash($password, PASSWORD_DEFAULT);
+
+  $sql = "INSERT INTO users (user, password)
+          VALUES ('$username', '$hash')";
+
+  try {
+    mysqli_query($conn, $sql);
+    echo"User created";
+  } catch (mysqli_sql_exception) {
+    echo"Could not create user";
+  }
+
+  mysqli_close($conn);
+?>
+```
+
+## Selecting data from MySQL tables
+
+```php
+<?php
+  include("database.php");
+
+  // $sql = "SELECT * FROM users WHERE user = 'Spongebob'";
+  $sql = "SELECT * FROM users";
+
+  $result = mysqli_query($conn, $sql);
+
+  if(mysqli_num_rows($result) > 0) {
+    while($row = mysqli_fetch_assoc($result)) {
+      echo $row["id"] . "<br>";
+      echo $row["user"] . "<br>";
+      echo $row["reg_date"] . "<br>";
+      echo "<br>";
+    }
+ } else {
+    echo "0 results";
+  }
+
+  mysqli_close($conn);
+?>
+```
+
+## Registration form project
+
+```php
+<?php
+  include("database.php");
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <form action="<?PHP htmlspecialchars($_SERVER["PHP_SELF"])?>" method="post">
+    <h2>Wecome to Fakebook!</h2>
+    username:<br>
+    <input type="text" name="username" value=""/><br>
+    password:<br>
+    <input type="password" name="password" value=""/><br>
+    <input type="submit" name="submit" value="Register"/>
+  </form>
+</body>
+</html>
+
+<?php
+  if($_SERVER["REQUEST_METHOD"] != "POST") return;
+
+    $username = filter_input(INPUT_POST, "username", FILTER_SANITIZE_SPECIAL_CHARS);
+    $password = filter_input(INPUT_POST, "password", FILTER_SANITIZE_SPECIAL_CHARS);
+
+    if(empty($username)) {
+      echo "Username cannot be empty" . "<br>";
+    } elseif (empty($password)) {
+      echo "Password cannot be empty" . "<br>";
+    } else {
+      $hash = password_hash($password, PASSWORD_DEFAULT);
+      $sql = "INSERT INTO users(user, password) VALUES('$username', '$hash')";
+
+      try {
+        $result = mysqli_query($conn, $sql);
+        echo "Registration successful" . "<br>";
+      } catch (mysqli_sql_exception) {
+        echo"Registration failed, username already exists" . "<br>";
+      }
+   }
+
+  mysqli_close($conn);
+?>
+```
+
+## OOP in PHP
+
+TODO
