@@ -1,0 +1,875 @@
+PHP - интерпретируемый язык, выполняется на сервере.
+
+Для добавления расширений (extensions) на виндовс надо изменить
+php.ini
+
+на линуксе: apt search php8.3 - покажет все доступные расширения
+после чего: sudo apt install php8.3-mysql - будет установлено
+
+
+PHP можно запустить из браузера или из консоли
+
+Запустить веб сервер:
+php -S localhost:8000 -t (дальше путь до проекта)
+
+
+## Переменные
+
+указатель смотрящий на ячейку в оперативной памяти
+
+названия не могут начинаться с цифр
+
+camelCase
+
+типы: строка, число, boolean, null (null не скалярный)
+
+php не строго типизированный язык
+
+word - функция выводящая не только значение переменной но и её тип
+
+## boolean
+
+принимает 2 значения: true, false
+
+! - унарная операция, отрицание
+
+
+PHP_EOL - PHP end of line, для вывода отдельной строки как <br> только для консоли
+
+## строки
+
+'' - обычная строка
+"" - компилируемая строка
+
+### Функции работы со строками
+
+strlen() - длина строки
+mb_strlen() - длины мультибайтовых строк (кириллические например)
+
+trim() - обрезка строк
+ltrim() - слева
+rtrim() - справа
+
+(в них можно передать значение, которое будет обрезано)
+
+
+strpos() - индекс с которого начинается подстринг, который мы в него передали
+stripos() - независимая от регистра, передавать аргумент можно не парясь о регистре
+
+substr() - параметры: string(из которой вырезать),
+	offset(сколько символов с начала не трогать),
+	length(сколько символов в итоге отрезать)
+	(length можно сделать отрицательным, тогда отсчёт будет идти от конца строки
+	 то есть сколько символов мы в конце строки не трогаем)
+
+str_replace() - параметры:
+	search(что ищем),
+	replace(чем заменяем),
+	subject(над кем делаем операцию)
+
+можно передавать массивы строк, но пока мне не совсем понятно каво чего
+
+
+## const
+
+принято писать КАПСОМ_И_РАЗДЕЛЯТЬ_UNDERSCORE
+
+могут быть только скалярным типом данных
+
+
+define("DAYS_COUNT_IN_WEEK", 7); #в этом случаем можно во втором аргументе рассчитать значение константы
+const WEEK_ENDS_IN_WEEK = 2; # тут нельзя
+
+
+магические константы выглядят так: __FILE__ и в зависимости от контекста меняют свои значения
+
+var_dump(__FILE__);
+
+__FUNCTION__ - выводит название текущей функции, если код внутри функции
+__NAMESPACE__ - выводит пространство имён файла
+__CLASS__ - выводит имя текущего класса (ООП)
+__METHOD__ - выводит имя исполняемого метода объекта (ООП)
+
+
+## null (значение переменной)
+
+значения не существует
+
+is_set()
+is_null()
+
+
+## тернарные операторы
+
+как в JS
+
+
+$deliveryPrice = $orderPrice >= 2000 ? 0 : 300;
+
+сокращенная версия оператора
+
+$displayName = $userName ?: 'Имя не указано';
+
+не делать тернарники, если нужно вернуть true или false,
+в этом случае достаточно просто присвоить переменной условное выражение:
+$num = $bigNum > 0 // true
+
+
+## логические операции
+
+### xor
+
+xor выведет true только когда сравниваемые значение не одинаковые
+
+## операторы выбора (switch / match)
+
+### match()
+
+<?php
+// match.php
+
+$keyPressedCode = rand(32, 41);
+
+if (rand(0, 4) > 2) {
+    $keyPressedCode = 13;
+}
+if (rand(0, 4) > 2) {
+    $keyPressedCode = 27;
+}
+
+echo "Код символа $keyPressedCode" . PHP_EOL;
+
+$keyType = match ($keyPressedCode) {
+    37, 38, 39, 40 => 'Стрелки направлений',
+    27 => 'Esc',
+    13 => 'Enter',
+    32 => 'Space',
+    default => 'другая клавиша'
+};
+
+echo $keyType . PHP_EOL;
+
+?>
+
+
+rand(15,20) - случайное число от 15 до 20
+
+
+## масссивы
+
+
+$emptyArray = [];
+
+$petTypes = ['кот', 'собака', 'рыба'];
+
+var_dump($petTypes);
+
+### добавление элемента в конец массива
+
+$petTypes[] = 'попугай';
+
+var_dump($petTypes);
+
+### удаление элемента массива
+
+unset($petTypes[2]);
+
+### переопределение индекса и последующих в массиве:
+
+$otherKeysArray = [
+	3 => 'first',
+	'second',
+	'third'
+];
+
+var_dump($otherKeysArray);
+
+second & third будут с индексами 4 и 5
+
+### Пример хранения данных в ассоциативных и сложных массивах
+
+<?php
+// catalog.php
+
+$catalog = [
+    'categories' => [
+        1 => [
+            'id' => 1,
+            'name' => 'Игрушки',
+            'room' => 'Детская',
+        ],
+        2 => [
+            'id' => 2,
+            'name' => 'Посуда',
+            'room' => 'Кухня',
+        ],
+    ],
+    'products' => [
+        [
+            'name' => 'Тетрис',
+            'price' => 250,
+            'category' => 1,
+        ],
+        [
+            'name' => 'Кружка',
+            'price' => 120,
+            'category' => 2,
+        ],
+        [
+            'name' => 'Плюшевый медведь',
+            'price' => 100,
+            'category' => 1,
+        ],
+    ]
+];
+
+$product = $catalog['products'][2];
+$productCategory = $catalog['categories'][$product['category']];
+
+echo "Товар: {$product['name']}. Цена: {$product['price']}. Категория: {$productCategory['name']}. Подходит для комнаты: {$productCategory['room']}." . PHP_EOL;
+// Товар: Плюшевый медведь. Цена: 100. Категория: Игрушки. Подходит для комнаты: Детская.
+
+ 
+## Суперглобальные переменные (массивы)
+
+// global_arrays.php
+
+session_start();
+
+var_dump($_GET); // Содержит данные, отправленные пользователем методом GET
+var_dump($_POST); //  Содержит данные, отправленные пользователем методом POST
+var_dump($_REQUEST); //  Содержит данные, отправленные пользователем вне зависимости от метода
+var_dump($_FILES); // Содержит временные файлы, отправленные пользователем
+
+var_dump($_ENV); // Содержит переменные окружения, если такие существуют
+var_dump($_SERVER); // Содержит параметры сервера
+
+var_dump($_COOKIE); // Содержит куки, отправленные пользователем
+var_dump($_SESSION); // Содержит данные сессии пользователя
+
+
+## Функции для работы с массивами
+
+count() - возвращает длину массива
+shuffle() - перемешивает значения массива
+
+
+// array_functions.php
+
+// массив из предыдущего урока
+$catalog = [
+   'categories' => [...],
+   'products' => [...]
+];
+
+var_dump(count($catalog['products'])); // 3
+
+shuffle($catalog['categories']);
+var_dump($catalog['categories']);
+
+array_keys() - возвращает ключи массива (ну или индексы)
+array_values() - возвращает значения массива (values)
+
+
+// array_keys|array_values
+var_dump(array_keys($catalog['categories'][1])); // ['id', 'name', 'room'];
+var_dump(array_values($catalog['categories'][1])); // [1, 'Игрушки', 'Детская'];
+
+
+in_array() - возвращает истину, если первый аргумент присутствует в массиве
+array_search() - ищет первый аргумент в массиве (2-й аргумент)
+
+// in_array|array_search
+var_dump(in_array(100, $catalog['products'][0])); // false
+var_dump(in_array('Кружка', $catalog['products'][1])); // true
+var_dump(in_array('Кружка', $catalog['products'][2])); // false
+
+var_dump(array_search(2, [1, 2, 3])); // 1
+var_dump(array_search(20, [1, 2, 3])); // false
+
+
+array_key_exists() - возвращает истину, если ключ (1-й арг.) присутствует в массиве (2-й арг.)
+
+// array_key_exists
+var_dump(array_key_exists(0, $catalog)); // false
+var_dump(array_key_exists('products', $catalog)); // true
+
+
+
+array_unique() - оставляет в массиве только уникальные значения (как Set из JS)
+array_map() - применяет пользовательскую фукнцию на все элементы массива
+
+
+// array_unique|array_map
+$rooms = array_map(fn ($item) => $item['room'], $catalog['categories']);
+var_dump($rooms); // [1 => 'Детская', 2 => 'Кухня', 3 => 'Кухня']
+var_dump(array_unique($rooms)); // [1 => 'Детская', 2 => 'Кухня']
+
+
+array_pop() - как в JS
+array_push() - как в JS
+array_shift() - удаление с начала массива
+array_unshift() - добавление в начало массива
+
+
+
+
+только usort() используется для сортировки многомерных массивов
+
+
+
+sort() - сортировка
+rsort() - сортировка в другом направлении
+
+asort() - coртировка с сохранением ключей исходного массива
+arsort() - обратная сортировка с сохранением ключей исходного массива
+
+
+ksort() - во возрастанию ключей
+krsort() - по убыванию ключей
+
+
+Для сортировки массива с применением пользовательских функций:
+
+usort() - без сохранения ключей исходного массива
+uasort() - с сохранением
+
+
+// usort|uasort()
+usort($catalog['products'], fn ($a, $b) => $a['price'] <=> $b['price']);
+var_dump($catalog['products']);
+
+тут используется специальный оператор <=> (< = >) который возвращает -1 0 1 если один из элементов больше равен или меньше первого.
+
+
+## Циклы
+
+// for.php
+
+for ($i = 0; $i < 5; $i++) {
+    echo "* - $i" . PHP_EOL;
+}
+// * - 0
+// * - 1
+// * - 2
+// * - 3
+// * - 4
+
+echo PHP_EOL;
+
+$rating = 3;
+for ($i = 1; $i <= 5; $i++) {
+    echo $i <= $rating ? '*' : 'o';
+}
+// ***oo
+
+echo PHP_EOL;
+
+
+
+// while.php
+
+$sum = 0;
+$productsCount = 0;
+
+while ($sum < 100 && $productsCount < 20) {
+    $productPrice = rand(1, 10);
+    $sum += $productPrice;
+    $productsCount++;
+}
+
+echo "Куплено товаров: $productsCount. На сумму: $sum" . PHP_EOL;
+// Куплено товаров: 16. На сумму: 103
+// …или…
+// Куплено товаров: 20. На сумму: 92
+
+
+
+<?php
+// while.php
+
+$moneyLeft = rand(5, 15);
+$productPrice = 10;
+$productsCount = 0;
+
+do {
+    $moneyLeft -= $productPrice;
+    $productsCount++;
+} while ($moneyLeft - $productPrice > 0);
+
+echo "Куплено товаров: $productsCount. Осталось денег: $moneyLeft" . PHP_EOL;
+if ($moneyLeft < 0) {
+    echo 'Кажется, вы влезли в кредит' . PHP_EOL;
+}
+// Куплено товаров: 1. Осталось денег: 4
+// …или…
+// Куплено товаров: 1. Осталось денег: -5
+// Кажется, вы влезли в кредит
+
+/**
+while (true) {
+    // логика работы демона
+    sleep(1);
+}
+*/
+
+
+
+бесконечный цикл (как делать не надо):
+
+// while.php
+
+while (true) {
+    // логика работы демона
+    sleep(1);
+}
+
+
+### foreach
+
+
+// foreach.php
+
+$basket = [
+    [
+        'product' => 'Тетрис',
+        'price' => 250,
+        'quantity' => 1,
+    ],
+    [
+        'product' => 'Плюшевый медведь',
+        'price' => 100,
+        'quantity' => 3,
+    ],
+];
+
+$sum = 0;
+
+foreach ($basket as $position) {
+    $sum += $position['price'] * $position['quantity'];
+}
+
+echo "В корзине товаров на сумму: $sum" . PHP_EOL;
+// В корзине товаров на сумму: 550
+
+
+
+### для ассоциативных массивов:
+
+<?php
+// foreach.php
+
+$colors = [
+    'red' => 'красный',
+    'blue' => 'синий',
+    'white' => 'белый',
+];
+
+foreach ($colors as $code => $color) {
+    echo "Цвет: $color. Код цвета: $code" . PHP_EOL;
+}
+// Цвет: красный. Код цвета: red
+// Цвет: синий. Код цвета: blue
+// Цвет: белый. Код цвета: white
+
+
+
+### break & continue
+
+Работают так же как и в JS.
+
+
+<?php
+// break.php
+
+$numbers = [1, 2, 3, 4, 5];
+$maxValue = 2;
+
+foreach ($numbers as $number) {
+    if ($number > $maxValue) {
+        echo "Достигнут предел $maxValue. Цикл завершен" . PHP_EOL;
+        break;
+    }
+    
+    echo "Число $number подходит" . PHP_EOL;
+}
+
+// Число 1 подходит
+// Число 2 подходит
+// Достигнут предел 2. Цикл завершен
+
+$matrix = [
+    [1, 2, 3, 4, 5],
+    [6, 7, 8, 9, 10],
+    [11, 12, 13, 14, 15],
+];
+
+$needNumber = 9;
+
+for ($i = 0; $i < count($matrix); $i++) {
+    for ($j = 0; $j < count($matrix[$i]); $j++) {
+        if ($matrix[$i][$j] === $needNumber) {
+            echo "Искомое число $needNumber в матрице находится на позиции: $i:$j" . PHP_EOL;
+            break(2);
+        }
+    }
+}
+// Искомое число 9 в матрице находится на позиции: 1:3
+
+
+
+<?php
+// continue.php
+
+$products = [
+    [
+        'name' => 'Кружка',
+        'price' => 120,
+        'category' => 2,
+    ],
+    [
+        'name' => 'Тетрис',
+        'price' => 250,
+        'category' => 1,
+    ],
+    [
+        'name' => 'Плюшевый медведь',
+        'price' => 100,
+        'category' => 1,
+    ],
+];
+
+$money = 150;
+echo "Денег у клиента: $money" . PHP_EOL;
+
+foreach ($products as $product) {
+    if ($product['price'] > $money) {
+        continue;
+    }
+
+    echo $product['name'] . ' за ' . $product['price'] . PHP_EOL;
+}
+// Денег у клиента: 150
+// Кружка за 120
+// Плюшевый медведь за 100
+
+
+// Решение без оператора continue
+foreach ($products as $product) {
+    if ($product['price'] <= $money) {
+        echo $product['name'] . ' за ' . $product['price'] . PHP_EOL;
+    }
+}
+
+
+
+## Пример применения циклов и массивов
+
+<?php
+// catalog.php
+
+$catalog = [
+    'categories' => [
+        1 => [
+            'id' => 1,
+            'name' => 'Игрушки',
+            'room' => 'Детская',
+        ],
+        2 => [
+            'id' => 2,
+            'name' => 'Посуда',
+            'room' => 'Кухня',
+        ],
+    ],
+    'products' => [
+        [
+            'name' => 'Тетрис',
+            'price' => 250,
+            'category' => 1,
+        ],
+        [
+            'name' => 'Кружка',
+            'price' => 120,
+            'category' => 2,
+        ],
+        [
+            'name' => 'Плюшевый медведь',
+            'price' => 100,
+            'category' => 1,
+        ],
+    ]
+];
+
+echo 'Каталог товаров' . PHP_EOL;
+
+foreach ($catalog['products'] as $product) {
+    $productCategory = $catalog['categories'][$product['category']];
+    echo "Товар: {$product['name']}. Цена: {$product['price']}. Категория: {$productCategory['name']}. Подходит для комнаты: {$productCategory['room']}." . PHP_EOL;    
+}
+
+// Каталог товаров
+// Товар: Тетрис. Цена: 250. Категория: Игрушки. Подходит для комнаты: Детская.
+// Товар: Кружка. Цена: 120. Категория: Посуда. Подходит для комнаты: Кухня.
+// Товар: Плюшевый медведь. Цена: 100. Категория: Игрушки. Подходит для комнаты: Детская.
+
+
+
+<?php
+// discount.php
+
+$catalog = [
+    'categories' => [
+        1 => [
+            'id' => 1,
+            'name' => 'Игрушки',
+            'room' => 'Детская',
+        ],
+        2 => [
+            'id' => 2,
+            'name' => 'Посуда',
+            'room' => 'Кухня',
+        ],
+    ],
+    'products' => [
+        [
+            'name' => 'Тетрис',
+            'price' => 250,
+            'category' => 1,
+        ],
+        [
+            'name' => 'Кружка',
+            'price' => 120,
+            'category' => 2,
+        ],
+        [
+            'name' => 'Плюшевый медведь',
+            'price' => 100,
+            'category' => 1,
+        ],
+    ]
+];
+
+$discountPercent = 10;
+
+foreach ($catalog['products'] as $key => $product) {
+    $product['oldPrice'] = $product['price'];
+    $product['price'] *= (1 - $discountPercent / 100);
+    $catalog['products'][$key] = $product;
+}
+
+echo 'Каталог товаров' . PHP_EOL;
+
+foreach ($catalog['products'] as $product) {
+    echo "Товар: {$product['name']}. Цена со скидкой: {$product['price']}. Старая цена {$product['oldPrice']}" . PHP_EOL;    
+}
+
+// Каталог товаров
+// Товар: Тетрис. Цена со скидкой: 225. Старая цена 250
+// Товар: Кружка. Цена со скидкой: 108. Старая цена 120
+// Товар: Плюшевый медведь. Цена со скидкой: 90. Старая цена 100
+
+
+
+## Функции
+
+Те же что и в JS.
+
+// function_one_parameter.php
+
+function showNextDaysDate($days)
+{
+    echo date('d.m', time() + $days * 86400) . PHP_EOL;
+}
+
+showNextDaysDate(0);
+showNextDaysDate(1);
+showNextDaysDate(7);
+
+
+// function_parameters.php
+
+function showIntegers($maxNumber, $step)
+{
+    $number = 0;
+    
+    while ($number < $maxNumber) {
+        echo "$number ";
+        $number += $step;
+    }
+}
+
+showIntegers(3, 1);
+// 0 1 2 
+
+showIntegers(10, 3);
+// 0 3 6 9
+
+
+можно называть параметры по их именам во время передачи их функции:
+
+// function_optional_parameters_php8.php
+
+function calculateDiscountedPrice($price, $percent = 10, $increase = false)
+{
+    if ($increase) {
+        $percent *= -1;
+    }
+
+    echo $price * (1 - $percent / 100) . PHP_EOL;
+}
+
+calculateDiscountedPrice(300); // 270
+calculateDiscountedPrice(300, 20); // 240
+calculateDiscountedPrice(300, increase: true); // 330
+
+
+бесконечное кол-во параметров:
+
+// function_many_parameters.php
+
+function sumOnlyBiggerNumbers($minValue = 0, ...$numbers)
+{
+    $sum = 0;
+    foreach ($numbers as $number) {
+        if ($number < $minValue) {
+            continue;
+        }
+        
+        $sum += $number;
+    }
+    
+    echo $sum . PHP_EOL;
+}
+
+sumOnlyBiggerNumbers(); // 0
+sumOnlyBiggerNumbers(3, 1, 2, 3, 4); // 7
+sumOnlyBiggerNumbers(1, 1, 2, 3, 4, 5, 6); // 21
+
+
+
+Передача параметров по ссылке:
+
+// function_link_parameter.php
+
+function increaseValue(&$value)
+{
+    $value += 2;
+}
+
+$number = 3;
+
+echo $number . PHP_EOL; // 3
+
+increaseValue($number);
+echo $number . PHP_EOL; // 5
+
+
+при этом значение переменной вне функции так же изменится.
+
+
+
+Чистая функция - функция, результат которой всегда определен
+и зависит только от входных параметров, а также при работе в
+этих функциях нет побочных эффектов.
+
+
+Побочные эффекты:
+
+- изменение исходных переменных
+- работа с суперглобальными массивами
+- подключение файлов
+- вывод данных
+
+
+Код не может состоять только из чистых функций,
+т.к. так или иначе данные нужно будет каким-либо образом
+вывести или куда-то сохранить, но при написании своих функций
+нужно стремиться к написанию именно чистых функций.
+
+
+// function_many_returns.php
+
+$user = [
+    'name' => 'Михаил',
+    'age' => rand(10, 20),
+    'money' => rand(100, 130),
+];
+
+$toys = [
+    [
+        'name' => 'Паровозик',
+        'price' => 120,
+        'minAge' => 16,
+    ],
+    [
+        'name' => 'Воздушный змей',
+        'price' => 110,
+        'minAge' => 18,
+    ],
+];
+
+function canBuyToy($user, $toy)
+{
+    if ($user['money'] < $toy['price']) {
+        return false;
+    }
+    
+    if ($user['age'] < $toy['minAge']) {
+        return false;
+    }
+    
+    return true;
+}
+
+echo sprintf('Денег %d, Возраст %s', $user['money'], $user['age']) . PHP_EOL;
+
+foreach ($toys as $toy) {
+    if (! canBuyToy($user, $toy)) {
+        continue;
+    }
+    
+    echo sprintf('%s может себе купить: %s за %d', $user['name'], $toy['name'], $toy['price']) . PHP_EOL;
+}
+// Денег 127, Возраст 20
+// Михаил может себе купить: Паровозик за 120
+// Михаил может себе купить: Воздушный змей за 110
+// или
+// Денег 100, Возраст 12
+
+
+
+## Стек вызова функций
+
+как и в др. языках программирования
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
